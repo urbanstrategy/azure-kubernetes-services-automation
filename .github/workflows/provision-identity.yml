@@ -1,0 +1,36 @@
+name: Provision Identity
+
+on:
+    workflow_call:
+
+jobs:
+    aks-infra-identity:
+        environment: endor
+        runs-on: [self-hosted, linux]
+        permissions:
+          contents: read
+          id-token: write
+        steps:
+          - name: Repo Self-Checkout
+            uses: actions/checkout@v3
+    
+          - name: Azure Login
+            uses: azure/login@v1        
+            with:         
+                tenant-id: ${{ secrets.TENANT_ID }}
+                client-id: ${{ secrets.CLIENT_ID }}
+                subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+                enable-AzPSSession: true
+    
+          - uses: azure/arm-deploy@v1
+            name: RG Identity
+            id: resourceGroupIdentity
+            with:
+              scope: subscription
+              region: ${{ vars.AZURE_REGION }}
+              subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+              deploymentName: rg-identity
+              template: arm/templates/resource-group.json
+              parameters: >
+                arm/parameters/resource-group.identity.json
+                resourceGroupLocation=${{ vars.AZURE_REGION }}
