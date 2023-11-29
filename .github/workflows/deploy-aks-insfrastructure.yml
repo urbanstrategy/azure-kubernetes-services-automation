@@ -42,5 +42,5 @@ jobs:
         with:
           template: arm/templates/log-analytics-workspace.json
           parameters: >
-            arm-templates/log-analytics-workspace.monitoring.json
+            arm/templates/log-analytics-workspace.monitoring.json
           resourceGroupName: ${{ steps.resourceGroupMonitoring.outputs.resourceGroupName }}
