@@ -12,10 +12,11 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - name: Repo Self-Checkout
+        uses: actions/checkout@v3
 
-      - uses: azure/login@v1
-        name: Azure OIDC login
+      - name: Azure Login
+        uses: azure/login@v1        
         with:         
             tenant-id: ${{ secrets.TENANT_ID }}
             client-id: ${{ secrets.CLIENT_ID }}
