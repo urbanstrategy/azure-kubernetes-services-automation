@@ -22,3 +22,16 @@ jobs:
             client-id: ${{ secrets.CLIENT_ID }}
             subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
             enable-AzPSSession: true
+
+      - uses: azure/arm-deploy@v1
+        name: RG Monitoring
+        id: resourceGroupMonitoring
+        with:
+          scope: subscription
+          region: ${{ vars.AZURE_REGION }}
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          deploymentName: rg-monitoring
+          template: arm/templates/resource-group.json
+          parameters: >
+            arm/params/resource-group.logging.json
+            resourceGroupLocation=${{ vars.AZURE_REGION }}
