@@ -1,0 +1,23 @@
+name: Deploy the Infrastructure for an Azure Kubernetes Cluster
+on: 
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  aks-infra:
+    environment: endor
+    runs-on: [self-hosted, linux]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: azure/login@v1
+        name: Azure OIDC login
+        with:         
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
