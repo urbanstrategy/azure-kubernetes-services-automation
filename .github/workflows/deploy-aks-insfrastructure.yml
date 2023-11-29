@@ -33,5 +33,5 @@ jobs:
           deploymentName: rg-monitoring
           template: arm/templates/resource-group.json
           parameters: >
-            arm/params/resource-group.logging.json
+            arm/parameters/resource-group.logging.json
             resourceGroupLocation=${{ vars.AZURE_REGION }}
