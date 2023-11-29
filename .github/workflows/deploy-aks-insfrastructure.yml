@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  aks-infra:
+  aks-infra-monitoring:
     environment: endor
     runs-on: [self-hosted, linux]
     permissions:
@@ -35,3 +35,12 @@ jobs:
           parameters: >
             arm/parameters/resource-group.monitoring.json
             resourceGroupLocation=${{ vars.AZURE_REGION }}
+      
+      - uses: azure/arm-deploy@v1
+        name: Log Analytics Workspace
+        id: logAnalyticsWorkspace
+        with:
+          template: arm/templates/log-analytics-workspace.json
+          parameters: >
+            arm-templates/log-analytics-workspace.monitoring.json
+          resourceGroupName: ${{ steps.resourceGroupMonitoring.outputs.resourceGroupName }}
