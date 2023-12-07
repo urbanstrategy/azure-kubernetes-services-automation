@@ -24,7 +24,7 @@ jobs:
 
       - uses: azure/arm-deploy@v1
         name: RG Networking
-        id: resourceGroupMonitoring
+        id: resourceGroupNetworking
         with:
           scope: subscription
           region: ${{ vars.AZURE_REGION }}
@@ -34,3 +34,16 @@ jobs:
           parameters: >
             arm/parameters/resource-group.networking.json
             resourceGroupLocation=${{ vars.AZURE_REGION }}
+
+      - uses: azure/arm-deploy@v1
+        name: Log Analytics Workspace
+        id: virtualNetwork
+        with:
+          template: arm/templates/virtual-network.json
+          parameters: >
+            arm/parameters/virtual-network.json
+          resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+    outputs:
+      vnetResourceId: ${{ steps.virtualNetwork.outputs.vnetResourceId }}
+      acrSubnetResourceId: ${{ steps.virtualNetwork.outputs.acrSubnetResourceId }}
+      aksSubnetResourceId: ${{ steps.virtualNetwork.outputs.aksSubnetResourceId }}
