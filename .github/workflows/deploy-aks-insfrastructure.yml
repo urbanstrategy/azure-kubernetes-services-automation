@@ -12,3 +12,7 @@ jobs:
   provision-identity:
     uses: ./.github/workflows/provision-identity.yml
     secrets: inherit
+  
+  provision-networking:
+    uses: ./.github/workflows/provision-networking.yml
+    secrets: inherit
