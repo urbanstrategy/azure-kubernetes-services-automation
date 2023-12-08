@@ -16,3 +16,6 @@ jobs:
   provision-networking:
     uses: ./.github/workflows/provision-networking.yml
     secrets: inherit
+    needs: [provision-monitoring]
+    with:
+      logAnalyticsWorkspaceResourceId: ${{ needs.provision-monitoring.outputs.logAnalyticsWorkspaceResourceId }}

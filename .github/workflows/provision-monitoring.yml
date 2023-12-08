@@ -2,6 +2,9 @@ name: Provision Monitoring
 
 on:
     workflow_call:
+      outputs:
+        logAnalyticsWorkspaceResourceId: 
+          value: ${{ jobs.provision-monitoring.outputs.logAnalyticsWorkspaceResourceId }}
 
 jobs:
   provision-monitoring:

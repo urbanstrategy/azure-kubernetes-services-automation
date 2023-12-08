@@ -2,6 +2,27 @@ name: Provision Networking
 
 on:
     workflow_call:
+      inputs:
+        logAnalyticsWorkspaceResourceId:
+          description: 'Log Analytics Workspace Resource Id'
+          required: true
+          type: string
+      outputs:
+        vnet-id:
+          description: 'Virtual Network Id'
+          value: ${{ jobs.provision-networking.outputs.vnet-id }}
+        subnet-id-aks:
+          description: 'Subnet Id for AKS'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-aks }}
+        subnet-id-sta:
+          description: 'Subnet Id for STA'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-sta }}
+        subnet-id-aag:
+          description: 'Subnet Id for AAG'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-aag }}
+        subnet-id-acr:
+          description: 'Subnet Id for ACR'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-acr }}
 
 jobs:
   provision-networking:
@@ -83,3 +104,9 @@ jobs:
             nsg-id-aks=${{ steps.nsgAKS.outputs.nsg-id }}
             nsg-id-sta=${{ steps.nsgSTA.outputs.nsg-id }}
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+    outputs:
+      vnet-id: ${{ steps.VNET.outputs.vnet-id }}
+      subnet-id-aks: ${{ steps.VNET.outputs.subnet-id-aks }}
+      subnet-id-sta: ${{ steps.VNET.outputs.subnet-id-sta }}
+      subnet-id-aag: ${{ steps.VNET.outputs.subnet-id-aag }}
+      subnet-id-acr: ${{ steps.VNET.outputs.subnet-id-acr }}
