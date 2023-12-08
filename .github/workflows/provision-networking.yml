@@ -6,7 +6,7 @@ on:
 jobs:
   provision-networking:
     environment: tno-us
-    runs-on: [self-hosted, linux]
+    runs-on: [linux]
     permissions:
       contents: read
       id-token: write
