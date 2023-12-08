@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vnet-name": {
-            "value": "vnet-p-uks-sta"
+            "value": "vnet-p-uks"
         },
         "nsg-name-acr": {
             "value": ""
