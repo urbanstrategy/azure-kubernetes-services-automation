@@ -36,14 +36,37 @@ jobs:
             resourceGroupLocation=${{ vars.AZURE_REGION }}
 
       - uses: azure/arm-deploy@v1
-        name: Log Analytics Workspace
-        id: virtualNetwork
+        name: NSG
+        id: nsgAAG
         with:
-          template: arm/templates/virtual-network.json
+          template: arm/templates/network-security-group.json
           parameters: >
-            arm/parameters/virtual-network.json
+            arm/parameters/network-security-group.aag.json
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
-    outputs:
-      vnetResourceId: ${{ steps.virtualNetwork.outputs.vnetResourceId }}
-      acrSubnetResourceId: ${{ steps.virtualNetwork.outputs.acrSubnetResourceId }}
-      aksSubnetResourceId: ${{ steps.virtualNetwork.outputs.aksSubnetResourceId }}
+
+      - uses: azure/arm-deploy@v1
+        name: NSG
+        id: nsgAKS
+        with:
+          template: arm/templates/network-security-group.json
+          parameters: >
+            arm/parameters/network-security-group.aks.json
+          resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+      
+      - uses: azure/arm-deploy@v1
+        name: NSG
+        id: nsgSTA
+        with:
+          template: arm/templates/network-security-group.json
+          parameters: >
+            arm/parameters/network-security-group.sta.json
+          resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+      
+      - uses: azure/arm-deploy@v1
+        name: NSG
+        id: nsgACR
+        with:
+          template: arm/templates/network-security-group.json
+          parameters: >
+            arm/parameters/network-security-group.acr.json
+          resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsg-name": {
+            "type": "string"
+        },
+        "nsg-rules": {
+            "type": "array"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('nsg-name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": "[parameters('nsg-rules')]"
+            }
+        }
+    ],
+    "outputs": {
+        "nsg-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsg-name'))]"
+        }
+    }
+}
