@@ -78,8 +78,8 @@ jobs:
           template: arm/templates/virtual-network.json
           parameters: >
             arm/parameters/virtual-network.json
-            nsg-name-acr=${{ steps.nsgACR.outputs.nsg-id }}
-            nsg-name-aag=${{ steps.nsgAAG.outputs.nsg-id }}
-            nsg-name-aks=${{ steps.nsgAKS.outputs.nsg-id }}
-            nsg-name-sta=${{ steps.nsgSTA.outputs.nsg-id }}
+            nsg-id-acr=${{ steps.nsgACR.outputs.nsg-id }}
+            nsg-id-aag=${{ steps.nsgAAG.outputs.nsg-id }}
+            nsg-id-aks=${{ steps.nsgAKS.outputs.nsg-id }}
+            nsg-id-sta=${{ steps.nsgSTA.outputs.nsg-id }}
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}

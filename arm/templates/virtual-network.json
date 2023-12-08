@@ -5,20 +5,23 @@
         "vnet-name": {
             "type": "string"
         },
-        "nsg-name-acr": {
+        "nsg-id-acr": {
             "type": "string"
         },
-        "nsg-name-aks": {
+        "nsg-id-aks": {
             "type": "string"
         },
-        "nsg-name-aag": {
+        "nsg-id-aag": {
             "type": "string"
         },
-        "nsg-name-sta": {
+        "nsg-id-sta": {
             "type": "string"
         },
         "vnet-address-prefixes": {
             "type": "array"
+        },
+        "snet-aks-address-prefix": {
+            "type": "string"
         }
     },
     "functions": [],
@@ -34,7 +37,18 @@
                     "addressPrefixes": "[parameters('vnet-address-prefixes')]"
                 },
                 "virtualNetworkPeerings": [],
-                "enableDdosProtection": false
+                "enableDdosProtection": false,
+                "subnets": [
+                    {
+                        "name": "snet-aks",
+                        "properties": {
+                            "addressPrefix": "[parameters('snet-aks-address-prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[parameters('nsg-id-aks')]"
+                            }
+                        }
+                    }
+                ]
             }
         }
     ],
