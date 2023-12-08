@@ -46,5 +46,6 @@ jobs:
           parameters: >
             arm/parameters/log-analytics-workspace.monitoring.json
           resourceGroupName: ${{ steps.resourceGroupMonitoring.outputs.resourceGroupName }}
+          deploymentName: log-analytics-workspace
     outputs:
       logAnalyticsWorkspaceResourceId: ${{ steps.logAnalyticsWorkspace.outputs.workspaceResourceId }}
