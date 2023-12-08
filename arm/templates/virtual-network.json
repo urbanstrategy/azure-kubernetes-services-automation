@@ -20,7 +20,28 @@
         "vnet-address-prefixes": {
             "type": "array"
         },
+        "snet-aks-name": {
+            "type": "string"
+        },
         "snet-aks-address-prefix": {
+            "type": "string"
+        },
+        "snet-aag-name": {
+            "type": "string"
+        },
+        "snet-aag-address-prefix": {
+            "type": "string"
+        },
+        "snet-acr-name": {
+            "type": "string"
+        },
+        "snet-acr-address-prefix": {
+            "type": "string"
+        },
+        "snet-sta-name": {
+            "type": "string"
+        },
+        "snet-sta-address-prefix": {
             "type": "string"
         }
     },
@@ -40,11 +61,38 @@
                 "enableDdosProtection": false,
                 "subnets": [
                     {
-                        "name": "snet-aks",
+                        "name": "[parameters('snet-aks-name')]",
                         "properties": {
                             "addressPrefix": "[parameters('snet-aks-address-prefix')]",
                             "networkSecurityGroup": {
                                 "id": "[parameters('nsg-id-aks')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[parameters('snet-aag-name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('snet-aag-address-prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[parameters('nsg-id-aag')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[parameters('snet-acr-name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('snet-acr-address-prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[parameters('nsg-id-acr')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[parameters('snet-sta-name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('snet-sta-address-prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[parameters('nsg-id-sta')]"
                             }
                         }
                     }
@@ -56,6 +104,22 @@
         "vnet-id": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]"
+        },
+        "snet-aks-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-aks-name'))]"
+        },
+        "snet-aag-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-aag-name'))]"
+        },
+        "snet-acr-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-acr-name'))]"
+        },
+        "snet-sta-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-sta-name'))]"
         }
     }
 }
