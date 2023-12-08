@@ -39,13 +39,13 @@
             "value": "snet-p-acr"
         },
         "snet-acr-address-prefix":{
-            "value": "10.0.1.0/24"
+            "value": "10.0.1.0/28"
         },
         "snet-sta-name": {
             "value": "snet-p-sta"
         },
         "snet-sta-address-prefix":{
-            "value": "10.0.2.0/24"
+            "value": "10.0.1.16/28"
         }
     }
 }
