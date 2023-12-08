@@ -5,16 +5,16 @@
         "vnet-name": {
             "value": "vnet-p-uks"
         },
-        "nsg-name-acr": {
+        "nsg-id-acr": {
             "value": ""
         },
-        "nsg-name-aks": {
+        "nsg-id-aks": {
             "value": ""
         },
-        "nsg-name-aag": {
+        "nsg-id-aag": {
             "value": ""
         },
-        "nsg-name-sta": {
+        "nsg-id-sta": {
             "value": ""
         },
         "vnet-address-prefixes":{
