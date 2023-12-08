@@ -36,7 +36,7 @@ jobs:
             resourceGroupLocation=${{ vars.AZURE_REGION }}
 
       - uses: azure/arm-deploy@v1
-        name: NSG
+        name: NSG AAG
         id: nsgAAG
         with:
           template: arm/templates/network-security-group.json
