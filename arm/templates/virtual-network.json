@@ -2,20 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworkName": {
+        "vnet-name": {
             "type": "string"
         },
-        "virtualNetworkAddressPrefix": {
+        "nsg-name-acr": {
             "type": "string"
         },
-        "subnetName": {
+        "nsg-name-aks": {
             "type": "string"
         },
-        "subnetAddressPrefix": {
+        "nsg-name-aag": {
             "type": "string"
         },
-        "networkSecurityGroupID": {
+        "nsg-name-sta": {
             "type": "string"
+        },
+        "vnet-address-prefixes": {
+            "type": "array"
         }
     },
     "functions": [],
@@ -23,47 +26,22 @@
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2019-11-01",
-            "name": "[parameters('virtualNetworkName')]",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('vnet-name')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "addressSpace": {
-                    "addressPrefixes": [
-                        "[parameters('virtualNetworkAddressPrefix')]"
-                    ]
+                    "addressPrefixes": "[parameters('vnet-address-prefixes')]"
                 },
-                "subnets": [
-                    {
-                        "name": "[parameters('subnetName')]",
-                        "type": "Microsoft.Network/virtualNetworks/subnets",
-                        "properties": {
-                            "addressPrefix": "[parameters('subnetAddressPrefix')]",
-                            "networkSecurityGroup": {
-                                "id": "[parameters('networkSecurityGroupID')]"
-                            },
-                            "privateEndpointNetworkPolicies": "Enabled"
-                        }
-                    }
-                ]
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
             }
         }
     ],
     "outputs": {
-        "virtualNetworkID": {
+        "vnet-id": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
-        },
-        "subnetID": {
-            "type": "string",
-            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
-        },
-        "virtualNetworkName": {
-            "type": "string",
-            "value": "[parameters('virtualNetworkName')]"
-        },
-        "subnetName": {
-            "type": "string",
-            "value": "[parameters('subnetName')]"
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]"
         }
     }
 }

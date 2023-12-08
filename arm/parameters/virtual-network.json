@@ -1,18 +1,27 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.1",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworkName": {
-            "value": "vnet-p-uks-ghrdoa"
+        "vnet-name": {
+            "value": "vnet-p-uks-sta"
         },
-        "virtualNetworkAddressPrefix": {
-            "value": "10.1.0.0/21"
+        "nsg-name-acr": {
+            "value": ""
         },
-        "subnetName": {
-            "value": "snet-p-uks-ghrdoa"
+        "nsg-name-aks": {
+            "value": ""
         },
-        "subnetAddressPrefix": {
-            "value": "10.1.0.0/21"
+        "nsg-name-aag": {
+            "value": ""
+        },
+        "nsg-name-sta": {
+            "value": ""
+        },
+        "vnet-address-prefixes":{
+            "value": [
+                "10.0.0.0/16",
+                "10.1.0.0/16"
+            ]
         }
     }
 }

@@ -45,7 +45,7 @@ jobs:
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
 
       - uses: azure/arm-deploy@v1
-        name: NSG
+        name: NSG AKS
         id: nsgAKS
         with:
           template: arm/templates/network-security-group.json
@@ -54,7 +54,7 @@ jobs:
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
       
       - uses: azure/arm-deploy@v1
-        name: NSG
+        name: NSG STA
         id: nsgSTA
         with:
           template: arm/templates/network-security-group.json
@@ -63,10 +63,23 @@ jobs:
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
       
       - uses: azure/arm-deploy@v1
-        name: NSG
+        name: NSG STA
         id: nsgACR
         with:
           template: arm/templates/network-security-group.json
           parameters: >
             arm/parameters/network-security-group.acr.json
+          resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+      
+      - uses: azure/arm-deploy@v1
+        name: VNET
+        id: VNET
+        with:
+          template: arm/templates/virtual-network.json
+          parameters: >
+            arm/parameters/virtual-network.json
+            nsg-name-acr=${{ steps.nsgACR.outputs.nsg-id }}
+            nsg-name-aag=${{ steps.nsgAAG.outputs.nsg-id }}
+            nsg-name-aks=${{ steps.nsgAKS.outputs.nsg-id }}
+            nsg-name-sta=${{ steps.nsgSTA.outputs.nsg-id }}
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
