@@ -75,7 +75,8 @@
                             "addressPrefix": "[parameters('snet-aag-address-prefix')]",
                             "networkSecurityGroup": {
                                 "id": "[parameters('nsg-id-aag')]"
-                            }
+                            },
+                            "privateEndpointNetworkPolicies": "Enabled"
                         }
                     },
                     {
@@ -84,7 +85,8 @@
                             "addressPrefix": "[parameters('snet-acr-address-prefix')]",
                             "networkSecurityGroup": {
                                 "id": "[parameters('nsg-id-acr')]"
-                            }
+                            },
+                            "privateEndpointNetworkPolicies": "Enabled"
                         }
                     },
                     {
@@ -93,7 +95,8 @@
                             "addressPrefix": "[parameters('snet-sta-address-prefix')]",
                             "networkSecurityGroup": {
                                 "id": "[parameters('nsg-id-sta')]"
-                            }
+                            },
+                            "privateEndpointNetworkPolicies": "Enabled"
                         }
                     }
                 ]
