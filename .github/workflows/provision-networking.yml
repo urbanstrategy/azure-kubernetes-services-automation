@@ -40,7 +40,7 @@ jobs:
         with:         
             tenant-id: ${{ secrets.TENANT_ID }}
             client-id: ${{ secrets.CLIENT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+            subscription-id: ${{ vars.SUBSCRIPTION_ID }}
             enable-AzPSSession: true
 
       - uses: azure/arm-deploy@v1
@@ -49,7 +49,7 @@ jobs:
         with:
           scope: subscription
           region: ${{ vars.AZURE_REGION }}
-          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
           deploymentName: rg-monitoring
           template: arm/templates/resource-group.json
           parameters: >
