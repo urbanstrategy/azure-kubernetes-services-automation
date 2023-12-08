@@ -5,7 +5,7 @@ on:
 
 jobs:
   provision-networking:
-    environment: endor
+    environment: tno-us
     runs-on: [self-hosted, linux]
     permissions:
       contents: read
