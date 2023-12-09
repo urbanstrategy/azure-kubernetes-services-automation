@@ -108,19 +108,19 @@
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]"
         },
-        "snet-aks-id": {
+        "subnet-aks-id": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-aks-name'))]"
         },
-        "snet-aag-id": {
+        "subnet-aag-id": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-aag-name'))]"
         },
-        "snet-acr-id": {
+        "subnet-acr-id": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-acr-name'))]"
         },
-        "snet-sta-id": {
+        "subnet-sta-id": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), parameters('snet-sta-name'))]"
         }
