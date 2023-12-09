@@ -16,6 +16,16 @@
         },
         "autoscaleMaxCapacity": {
             "value": 5
+        },
+        "frontEndPorts": {
+            "value": [
+                {
+                    "name": "applicationGatewayDefaultFrontendPort",
+                    "properties": {
+                        "port": 80
+                    }
+                }
+            ]
         }
     }
 }

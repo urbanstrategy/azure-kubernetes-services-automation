@@ -22,6 +22,9 @@
         },
         "autoscaleMaxCapacity": {
             "type": "int"
+        },
+        "frontEndPorts": {
+            "type": "array"
         }
     },
     "functions": [],
@@ -58,6 +61,7 @@
                         }
                     }
                 ],
+                "frontendPorts": "[parameters('frontEndPorts')]",
                 "autoscaleConfiguration": {
                     "minCapacity": "[parameters('autoscaleMinCapacity')]",
                     "maxCapacity": "[parameters('autoscaleMaxCapacity')]"
