@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aagName": {
+            "type": "string"
+        },
+        "skuName": {
+            "type": "string"
+        },
+        "skuTier": {
+            "type": "string"
+        },
+        "subnetId": {
+            "type": "string"
+        },
+        "publicIPId": {
+            "type": "string"
+        },
+        "autoscaleMinCapacity": {
+            "type": "int"
+        },
+        "autoscaleMaxCapacity": {
+            "type": "int"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('aagName')]",
+            "location": "[resourceGroup().location]",
+            "properties":{
+                "sku": {
+                    "name": "[parameters('skuName')]",
+                    "tier": "[parameters('skuTier')]"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[parameters('subnetId')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations":[
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "properties":{
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[parameters('publicIPId')]"
+                            }
+                        }
+                    }
+                ],
+                "autoscaleConfiguration": {
+                    "minCapacity": "[parameters('autoscaleMinCapacity')]",
+                    "maxCapacity": "[parameters('autoscaleMaxCapacity')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "aagId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/applicationGateways', parameters('aagName'))]"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aagName": {
+            "value": "aag-p-uks-delivery"
+        },
+        "skuName": {
+            "value": "Standard_v2"
+        },
+        "skuTier": {
+            "value": "Standard_v2"
+        },
+        "autoscaleMinCapacity": {
+            "value": 0
+        },
+        "autoscaleMaxCapacity": {
+            "value": 5
+        }
+    }
+}

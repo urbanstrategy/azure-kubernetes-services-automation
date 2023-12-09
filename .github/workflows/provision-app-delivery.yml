@@ -57,3 +57,15 @@ jobs:
             arm/parameters/public-ip.delivery.json
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: public-ip-delivery
+      
+      - uses: azure/arm-deploy@v1
+        name: Application Gateway
+        id: applicationGateway
+        with:
+          template: arm/templates/application-gateway.json
+          parameters: >
+            arm/parameters/application-gateway.delivery.json
+            subnetId=${{ inputs.subnetResourceId }}}
+            publicIPId=${{ steps.publicIP.outputs.public-ip-id }}
+          resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
+          deploymentName: application-gateway-delivery
