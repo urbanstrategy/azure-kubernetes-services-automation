@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "publicIPname": {
-            "value": "myPublicIP"
+            "value": "pip-p-uks-delivery"
         },
         "publicIPSKUName":{
             "value": "Standard"
