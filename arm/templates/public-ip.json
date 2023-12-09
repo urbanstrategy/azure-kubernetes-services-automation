@@ -23,6 +23,10 @@
             "sku": {
                 "name": "[parameters('publicIPSKUName')]",
                 "tier": "[parameters('publicIPSKUtier')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv4"
             }
         }
     ],
