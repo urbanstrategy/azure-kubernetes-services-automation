@@ -111,7 +111,7 @@ jobs:
           deploymentName: vnet
     outputs:
       vnet-id: ${{ steps.VNET.outputs.vnet-id }}
-      subnet-id-aks: ${{ steps.VNET.outputs.subnet-id-aks }}
-      subnet-id-sta: ${{ steps.VNET.outputs.subnet-id-sta }}
-      subnet-id-aag: ${{ steps.VNET.outputs.subnet-id-aag }}
-      subnet-id-acr: ${{ steps.VNET.outputs.subnet-id-acr }}
+      subnet-id-aks: ${{ steps.VNET.outputs.subnet-aks-id }}
+      subnet-id-sta: ${{ steps.VNET.outputs.subnet-sta-id }}
+      subnet-id-aag: ${{ steps.VNET.outputs.subnet-aag-id }}
+      subnet-id-acr: ${{ steps.VNET.outputs.subnet-acr-id }}
