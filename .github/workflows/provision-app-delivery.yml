@@ -47,3 +47,13 @@ jobs:
           parameters: >
             arm/parameters/resource-group.delivery.json
             resourceGroupLocation=${{ vars.AZURE_REGION }}
+      
+      - uses: azure/arm-deploy@v1
+        name: Public IP
+        id: publicIP
+        with:
+          template: arm/templates/public-ip.json
+          parameters: >
+            arm/parameters/public-ip.delivery.json
+          resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
+          deploymentName: public-ip-delivery

@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publicIPname": {
+            "type": "string"            
+        },
+        "publicIPSKUName": {
+            "type": "string"
+        },
+        "publicIPSKUtier": {
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('publicIPname')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('publicIPSKUName')]",
+                "tier": "[parameters('publicIPSKUtier')]"
+            }
+        }
+    ],
+    "outputs": {
+        "public-ip-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPname'))]"
+        }
+    }
+}
