@@ -1,0 +1,49 @@
+name: Provision Application Delivery
+
+on:
+    workflow_call:
+      inputs:
+        logAnalyticsWorkspaceResourceId:
+          description: 'Log Analytics Workspace Resource Id'
+          required: true
+          type: string
+        vnetResourceId:
+          description: 'VNet Resource Id'
+          required: true
+          type: string
+        subnetResourceId:
+          description: 'Subnet Resource Id'
+          required: true
+          type: string
+
+jobs:
+  provision-application-delivery:
+    environment: endor
+    runs-on: [self-hosted, linux]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Repo Self-Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1        
+        with:         
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
+      
+      - uses: azure/arm-deploy@v1
+        name: RG App Delivery
+        id: resourceGroupDelivery
+        with:
+          scope: subscription
+          region: ${{ vars.AZURE_REGION }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
+          deploymentName: rg-delivery
+          template: arm/templates/resource-group.json
+          parameters: >
+            arm/parameters/resource-group.delivery.json
+            resourceGroupLocation=${{ vars.AZURE_REGION }}

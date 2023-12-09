@@ -19,3 +19,12 @@ jobs:
     needs: [provision-monitoring]
     with:
       logAnalyticsWorkspaceResourceId: ${{ needs.provision-monitoring.outputs.logAnalyticsWorkspaceResourceId }}
+  
+  provision-app-delivery:
+    uses: ./.github/workflows/provision-app-delivery.yml
+    secrets: inherit
+    needs: [provision-monitoring, provision-networking]
+    with:
+      logAnalyticsWorkspaceResourceId: ${{ needs.provision-monitoring.outputs.logAnalyticsWorkspaceResourceId }}
+      vnetResourceId: ${{ needs.provision-networking.outputs.vnet-id }}
+      subnetResourceId: ${{ needs.provision-networking.outputs.subnet-id-aag }}
