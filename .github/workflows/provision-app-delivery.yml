@@ -65,7 +65,7 @@ jobs:
           template: arm/templates/application-gateway.json
           parameters: >
             arm/parameters/application-gateway.delivery.json
-            subnetId=${{ inputs.subnetResourceId }}}
+            subnetId=${{ inputs.subnetResourceId }}
             publicIPId=${{ steps.publicIP.outputs.public-ip-id }}
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: application-gateway-delivery
