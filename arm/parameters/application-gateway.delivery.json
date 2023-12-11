@@ -5,17 +5,17 @@
         "aagName": {
             "value": "aag-p-uks-delivery"
         },
-        "skuName": {
-            "value": "Standard_v2"
+        "sku": {
+            "value": {
+                "name": "Standard_v2",
+                "tier": "Standard_v2"
+            }
         },
-        "skuTier": {
-            "value": "Standard_v2"
-        },
-        "autoscaleMinCapacity": {
-            "value": 0
-        },
-        "autoscaleMaxCapacity": {
-            "value": 5
+        "autoscaleConfiguration":{
+            "value": {
+                "minCapacity": 0,
+                "maxCapacity": 5
+            }
         },
         "frontEndPorts": {
             "value": [
@@ -33,8 +33,26 @@
                 }
             ]
         },
-        "gatewayIPConfigurationName": {
-            "value": "agw-ipconfig"
+        "backendAddressPools": {
+            "value": [
+                {
+                    "name": "defaultBackendAddressPool",
+                    "properties": {
+                        "backendAddresses": []
+                    }
+                }
+            ]
+        },
+        "backendHttpSettingsCollection": {
+            "value": [
+                {
+                    "name": "setting",
+                    "properties": {
+                        "port": 80,
+                        "protocol": "http"
+                    }
+                }
+            ]
         }
     }
 }
