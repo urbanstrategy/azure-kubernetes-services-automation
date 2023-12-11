@@ -20,12 +20,21 @@
         "frontEndPorts": {
             "value": [
                 {
-                    "name": "applicationGatewayDefaultFrontendPort",
+                    "name": "http",
                     "properties": {
                         "port": 80
                     }
+                },
+                {
+                    "name": "https",
+                    "properties": {
+                        "port": 443
+                    }
                 }
             ]
+        },
+        "gatewayIPConfigurationName": {
+            "value": "agw-ipconfig"
         }
     }
 }

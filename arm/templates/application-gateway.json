@@ -25,24 +25,32 @@
         },
         "frontEndPorts": {
             "type": "array"
+        },
+        "gatewayIPConfigurationName": {
+            "type": "string"
         }
     },
     "functions": [],
-    "variables": {},
+    "variables": {
+        "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', parameters('aagName')) ]"
+    },
     "resources": [
         {
             "type": "Microsoft.Network/applicationGateways",
             "apiVersion": "2023-05-01",
             "name": "[parameters('aagName')]",
             "location": "[resourceGroup().location]",
-            "properties":{
+            "tags": {
+                "managed-by-k8s-ingress": "true"
+            },
+            "properties": {
                 "sku": {
                     "name": "[parameters('skuName')]",
                     "tier": "[parameters('skuTier')]"
                 },
                 "gatewayIPConfigurations": [
                     {
-                        "name": "appGatewayIpConfig",
+                        "name": "[parameters('gatewayIPConfigurationName')]",
                         "properties": {
                             "subnet": {
                                 "id": "[parameters('subnetId')]"
@@ -50,10 +58,10 @@
                         }
                     }
                 ],
-                "frontendIPConfigurations":[
+                "frontendIPConfigurations": [
                     {
                         "name": "appGatewayFrontendIP",
-                        "properties":{
+                        "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
                                 "id": "[parameters('publicIPId')]"
@@ -62,10 +70,58 @@
                     }
                 ],
                 "frontendPorts": "[parameters('frontEndPorts')]",
+                "backendAddressPools": [
+                    {
+                        "name": "appGatewayBackendPool",
+                        "properties": {
+                            "backendAddresses": []
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "setting",
+                        "properties": {
+                            "port": 80,
+                            "protocol": "http"
+                        }
+                    }
+                ],
                 "autoscaleConfiguration": {
                     "minCapacity": "[parameters('autoscaleMinCapacity')]",
                     "maxCapacity": "[parameters('autoscaleMaxCapacity')]"
-                }
+                },
+                "httpListeners": [
+                    {
+                        "name": "httpListener",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/http')]"
+                            },
+                            "protocol": "Http"
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "name": "rule1",                        
+                        "properties": {
+                            "priority": 1,
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/setting')]"
+                            },
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/httpListener')]"
+                            }
+                        }
+                    }
+                ]
             }
         }
     ],
