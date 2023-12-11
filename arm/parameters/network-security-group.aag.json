@@ -6,7 +6,25 @@
             "value": "nsg-p-uks-aag"
         },
         "nsg-rules": {
-            "value": []
+            "value": [
+                {
+                    "name": "AllowAAGV2ManagementPortsInBound",
+                    "properties": {
+                        "protocol": "TCP",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "65200-65535",
+                        "sourceAddressPrefix": "Internet",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 100,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                }
+            ]
         }
     }
 }
