@@ -15,7 +15,7 @@ on:
           description: 'Subnet Resource Id'
           required: true
           type: string
-        aagIdentityResourceId:
+        aksIdentityResourceId:
           description: 'Application Gateway Identity Resource Id'
           required: true
           type: string
@@ -76,7 +76,7 @@ jobs:
           parameters: >
             arm/parameters/role-assignment.aag-on-acr.json
             targetResourceId=${{ steps.container-registry.outputs.acrResourceId }}
-            uamiResourceId=${{ inputs.aagIdentityResourceId }}
+            uamiResourceId=${{ inputs.aksIdentityResourceId }}
           resourceGroupName: ${{ steps.resourceGroupRegistry.outputs.resourceGroupName }}
           deploymentName: key-vault-rbac-aag
     outputs:
