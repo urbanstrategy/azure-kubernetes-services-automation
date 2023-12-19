@@ -63,7 +63,7 @@ jobs:
           template: arm/templates/container-registry.json
           parameters: >
             arm/parameters/container-registry.json
-            virtualNetworkId=${{ inputs.vnetResourceId }}}
+            virtualNetworkId=${{ inputs.vnetResourceId }}
             subnetID=${{ inputs.subnetResourceId }}
           resourceGroupName: ${{ steps.resourceGroupRegistry.outputs.resourceGroupName }}
           deploymentName: container-registry
