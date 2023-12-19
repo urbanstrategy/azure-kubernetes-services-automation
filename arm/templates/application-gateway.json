@@ -25,6 +25,9 @@
         },
         "backendHttpSettingsCollection": {
             "type": "array"
+        },
+        "userAssignedIdentityResourceId": {
+            "type": "string"
         }
     },
     "functions": [],
@@ -60,6 +63,12 @@
             "location": "[resourceGroup().location]",
             "tags": {
                 "managed-by-k8s-ingress": "true"
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('userAssignedIdentityResourceId')]": {}
+                }
             },
             "properties": {
                 "sku": "[parameters('sku')]",
