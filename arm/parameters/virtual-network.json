@@ -23,8 +23,29 @@
                 "10.1.0.0/16"
             ]
         },
+        "snet-aks-name": {
+            "value": "snet-p-aks"
+        },
         "snet-aks-address-prefix":{
             "value": "10.1.0.0/16"
+        },
+        "snet-aag-name": {
+            "value": "snet-p-aag"
+        },
+        "snet-aag-address-prefix":{
+            "value": "10.0.0.0/24"
+        },
+        "snet-acr-name": {
+            "value": "snet-p-acr"
+        },
+        "snet-acr-address-prefix":{
+            "value": "10.0.1.0/28"
+        },
+        "snet-sta-name": {
+            "value": "snet-p-sta"
+        },
+        "snet-sta-address-prefix":{
+            "value": "10.0.1.16/28"
         }
     }
 }

@@ -2,6 +2,27 @@ name: Provision Networking
 
 on:
     workflow_call:
+      inputs:
+        logAnalyticsWorkspaceResourceId:
+          description: 'Log Analytics Workspace Resource Id'
+          required: true
+          type: string
+      outputs:
+        vnet-id:
+          description: 'Virtual Network Id'
+          value: ${{ jobs.provision-networking.outputs.vnet-id }}
+        subnet-id-aks:
+          description: 'Subnet Id for AKS'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-aks }}
+        subnet-id-sta:
+          description: 'Subnet Id for STA'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-sta }}
+        subnet-id-aag:
+          description: 'Subnet Id for AAG'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-aag }}
+        subnet-id-acr:
+          description: 'Subnet Id for ACR'
+          value: ${{ jobs.provision-networking.outputs.subnet-id-acr }}
 
 jobs:
   provision-networking:
@@ -19,7 +40,7 @@ jobs:
         with:         
             tenant-id: ${{ secrets.TENANT_ID }}
             client-id: ${{ secrets.CLIENT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+            subscription-id: ${{ vars.SUBSCRIPTION_ID }}
             enable-AzPSSession: true
 
       - uses: azure/arm-deploy@v1
@@ -28,7 +49,7 @@ jobs:
         with:
           scope: subscription
           region: ${{ vars.AZURE_REGION }}
-          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
           deploymentName: rg-monitoring
           template: arm/templates/resource-group.json
           parameters: >
@@ -43,6 +64,7 @@ jobs:
           parameters: >
             arm/parameters/network-security-group.aag.json
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+          deploymentName: nsg-aag
 
       - uses: azure/arm-deploy@v1
         name: NSG AKS
@@ -52,6 +74,7 @@ jobs:
           parameters: >
             arm/parameters/network-security-group.aks.json
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+          deploymentName: nsg-aks
       
       - uses: azure/arm-deploy@v1
         name: NSG STA
@@ -61,6 +84,7 @@ jobs:
           parameters: >
             arm/parameters/network-security-group.sta.json
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+          deploymentName: nsg-sta
       
       - uses: azure/arm-deploy@v1
         name: NSG STA
@@ -70,6 +94,7 @@ jobs:
           parameters: >
             arm/parameters/network-security-group.acr.json
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+          deploymentName: nsg-acr
       
       - uses: azure/arm-deploy@v1
         name: VNET
@@ -83,3 +108,10 @@ jobs:
             nsg-id-aks=${{ steps.nsgAKS.outputs.nsg-id }}
             nsg-id-sta=${{ steps.nsgSTA.outputs.nsg-id }}
           resourceGroupName: ${{ steps.resourceGroupNetworking.outputs.resourceGroupName }}
+          deploymentName: vnet
+    outputs:
+      vnet-id: ${{ steps.VNET.outputs.vnet-id }}
+      subnet-id-aks: ${{ steps.VNET.outputs.subnet-aks-id }}
+      subnet-id-sta: ${{ steps.VNET.outputs.subnet-sta-id }}
+      subnet-id-aag: ${{ steps.VNET.outputs.subnet-aag-id }}
+      subnet-id-acr: ${{ steps.VNET.outputs.subnet-acr-id }}

@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aagName": {
+            "value": "aag-p-uks-delivery"
+        },
+        "sku": {
+            "value": {
+                "name": "Standard_v2",
+                "tier": "Standard_v2"
+            }
+        },
+        "autoscaleConfiguration":{
+            "value": {
+                "minCapacity": 0,
+                "maxCapacity": 5
+            }
+        },
+        "frontEndPorts": {
+            "value": [
+                {
+                    "name": "http",
+                    "properties": {
+                        "port": 80
+                    }
+                },
+                {
+                    "name": "https",
+                    "properties": {
+                        "port": 443
+                    }
+                }
+            ]
+        },
+        "backendAddressPools": {
+            "value": [
+                {
+                    "name": "defaultBackendAddressPool",
+                    "properties": {
+                        "backendAddresses": []
+                    }
+                }
+            ]
+        },
+        "backendHttpSettingsCollection": {
+            "value": [
+                {
+                    "name": "setting",
+                    "properties": {
+                        "port": 80,
+                        "protocol": "http"
+                    }
+                }
+            ]
+        }
+    }
+}
