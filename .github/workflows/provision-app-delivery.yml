@@ -15,9 +15,13 @@ on:
           description: 'Subnet Resource Id'
           required: true
           type: string
+        aagIdentityResourceId:
+          description: 'Application Gateway Identity Resource Id'
+          required: true
+          type: string
 
 jobs:
-  provision-application-delivery:
+  provision-aag:
     environment: endor
     runs-on: [ubuntu-latest]
     permissions:
@@ -69,3 +73,23 @@ jobs:
             publicIPId=${{ steps.publicIP.outputs.public-ip-id }}
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: application-gateway-delivery
+    outputs:
+      aag-resource-id: ${{ steps.applicationGateway.outputs.aagResourceId }}
+  provision-akv:
+      environment: endor
+      runs-on: [ubuntu-latest]
+      needs: provision-aag
+      permissions:
+        contents: read
+        id-token: write
+      steps:
+        - name: Repo Self-Checkout
+          uses: actions/checkout@v3
+
+        - name: Azure Login
+          uses: azure/login@v1        
+          with:         
+              tenant-id: ${{ secrets.TENANT_ID }}
+              client-id: ${{ secrets.CLIENT_ID }}
+              subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+              enable-AzPSSession: true
