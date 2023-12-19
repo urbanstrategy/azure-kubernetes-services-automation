@@ -78,6 +78,7 @@ jobs:
             arm/parameters/application-gateway.delivery.json
             subnetId=${{ inputs.subnetResourceId }}
             publicIPId=${{ steps.publicIP.outputs.public-ip-id }}
+            userAssignedIdentityResourceId=${{ inputs.aagIdentityResourceId }}
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: application-gateway-delivery
     outputs:
@@ -109,7 +110,7 @@ jobs:
           with:
             template: arm/templates/key-vault.json
             parameters: >
-              arm/parameters/key-vault.delivery.json
+              arm/parameters/key-vault.json
             resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
             deploymentName: key-vault-delivery
         
