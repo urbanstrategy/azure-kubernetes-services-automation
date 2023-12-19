@@ -104,7 +104,7 @@
         }
     ],
     "outputs": {
-        "aagId": {
+        "aagResourceId": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/applicationGateways', parameters('aagName'))]"
         }
