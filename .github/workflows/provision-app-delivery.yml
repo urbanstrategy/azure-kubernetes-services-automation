@@ -120,7 +120,7 @@ jobs:
           with:
             template: arm/templates/role-assignment.json
             parameters: >
-              arm/parameters/role-assignment.aag.json
+              arm/parameters/role-assignment.aag-on-akv.json
               targetResourceId=${{ steps.akv.outputs.keyVaultResourceId }}
               uamiResourceId=${{ inputs.aagIdentityResourceId }}
             resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
