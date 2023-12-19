@@ -19,6 +19,13 @@ on:
           description: 'Application Gateway Identity Resource Id'
           required: true
           type: string
+      outputs:
+        aagResourceId:
+          description: 'Application Gateway Resource Id'
+          value: ${{ jobs.provision-aag.outputs.aag-resource-id }}
+        keyVaultResourceId:
+          description: 'Key Vault Resource Id'
+          value: ${{ jobs.provision-akv.outputs.key-vault-resource-id }}
 
 jobs:
   provision-aag:
@@ -74,7 +81,9 @@ jobs:
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: application-gateway-delivery
     outputs:
+      delivery-resource-group-name: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
       aag-resource-id: ${{ steps.applicationGateway.outputs.aagResourceId }}
+  
   provision-akv:
       environment: endor
       runs-on: [ubuntu-latest]
@@ -93,3 +102,27 @@ jobs:
               client-id: ${{ secrets.CLIENT_ID }}
               subscription-id: ${{ vars.SUBSCRIPTION_ID }}
               enable-AzPSSession: true
+        
+        - uses: azure/arm-deploy@v1
+          name: Azure Key Vault
+          id: akv
+          with:
+            template: arm/templates/key-vault.json
+            parameters: >
+              arm/parameters/key-vault.delivery.json
+            resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
+            deploymentName: key-vault-delivery
+        
+        - uses: azure/arm-deploy@v1
+          name: Allow the AAG to read from AKV
+          id: key-vault-rbac-aag
+          with:
+            template: arm/templates/role-assignment.json
+            parameters: >
+              arm/parameters/role-assignment.aag.json
+              targetResourceId=${{ steps.akv.outputs.keyVaultResourceId }}
+              uamiResourceId=${{ inputs.aagIdentityResourceId }}
+            resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
+            deploymentName: key-vault-rbac-aag
+      outputs:
+        key-vault-resource-id: ${{ steps.akv.outputs.keyVaultResourceId }}
