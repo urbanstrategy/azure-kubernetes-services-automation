@@ -18,7 +18,7 @@ on:
 
 jobs:
   provision-application-delivery:
-    environment: endor
+    environment: tno-us
     runs-on: [ubuntu-latest]
     permissions:
       contents: read
