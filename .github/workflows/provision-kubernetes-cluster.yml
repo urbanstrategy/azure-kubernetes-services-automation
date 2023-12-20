@@ -72,4 +72,18 @@ jobs:
           parameters: >
             arm/parameters/resource-group.aks-iaas.json
             resourceGroupLocation=${{ vars.AZURE_REGION }}
+
+      - uses: azure/arm-deploy@v1
+        name: Kubernetes Cluster
+        id: kubernetes-cluster
+        with:
+          template: arm/templates/kubernetes-cluster.json
+          parameters: >
+            arm/parameters/kubernetes-cluster.json
+            virtualNetworkId=${{ inputs.vnetResourceId }}
+            subnetID=${{ inputs.subnetResourceId }}
+            resourgeGroupAKSIaaS=${{ steps.resourceGroupAKSIaaS.outputs.resourceGroupName }}
+            clusterIdentity=${{ inputs.aksIdentityResourceId }}
+          resourceGroupName: ${{ steps.resourceGroupAKSPaaS.outputs.resourceGroupName }}
+          deploymentName: container-registry
       
