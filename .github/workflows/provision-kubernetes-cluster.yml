@@ -1,0 +1,89 @@
+name: Provision Kubernetes Cluster
+
+on:
+    workflow_call:
+      inputs:
+        logAnalyticsWorkspaceResourceId:
+          description: 'Log Analytics Workspace Resource Id'
+          required: true
+          type: string
+        vnetResourceId:
+          description: 'VNet Resource Id'
+          required: true
+          type: string
+        subnetResourceId:
+          description: 'Subnet Resource Id'
+          required: true
+          type: string
+        aksIdentityResourceId:
+          description: 'Application Gateway Identity Resource Id'
+          required: true
+          type: string
+        containerRegistryResourceId:
+          description: 'Container Registry Resource Id'
+          required: true
+          type: string
+        aagResourceId:
+          description: 'Application Gateway Resource Id'
+          required: true
+          type: string
+
+jobs:
+  provision-aks:
+    environment: endor
+    runs-on: [ubuntu-latest]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Repo Self-Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1        
+        with:         
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
+      
+      - uses: azure/arm-deploy@v1
+        name: RG AKS PaaS
+        id: resourceGroupAKSPaaS
+        with:
+          scope: subscription
+          region: ${{ vars.AZURE_REGION }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
+          deploymentName: rg-aks-paas
+          template: arm/templates/resource-group.json
+          parameters: >
+            arm/parameters/resource-group.aks-paas.json
+            resourceGroupLocation=${{ vars.AZURE_REGION }}
+      
+      - uses: azure/arm-deploy@v1
+        name: RG AKS IaaS
+        id: resourceGroupAKSIaaS
+        with:
+          scope: subscription
+          region: ${{ vars.AZURE_REGION }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
+          deploymentName: rg-aks-iaas
+          template: arm/templates/resource-group.json
+          parameters: >
+            arm/parameters/resource-group.aks-iaas.json
+            resourceGroupLocation=${{ vars.AZURE_REGION }}
+
+      - uses: azure/arm-deploy@v1
+        name: Kubernetes Cluster
+        id: kubernetes-cluster
+        with:
+          template: arm/templates/kubernetes-cluster.json
+          parameters: >
+            arm/parameters/kubernetes-cluster.json
+            virtualNetworkId=${{ inputs.vnetResourceId }}
+            subnetID=${{ inputs.subnetResourceId }}
+            resourgeGroupAKSIaaS=${{ steps.resourceGroupAKSIaaS.outputs.resourceGroupName }}
+            clusterIdentity=${{ inputs.aksIdentityResourceId }}
+          resourceGroupName: ${{ steps.resourceGroupAKSPaaS.outputs.resourceGroupName }}
+          deploymentName: container-registry
+      

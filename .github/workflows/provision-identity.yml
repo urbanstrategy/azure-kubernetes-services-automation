@@ -2,6 +2,13 @@ name: Provision Identity
 
 on:
     workflow_call:
+      outputs:
+        aagIdentityResourceId:
+          description: The resource id of the user assigned managed identity for the AAG
+          value: ${{ jobs.aks-infra-identity.outputs.aagIdentityResourceId }}
+        aksIdentityResourceId:
+          description: The resource id of the user assigned managed identity for the AKS cluster
+          value: ${{ jobs.aks-infra-identity.outputs.aksIdentityResourceId }}
 
 jobs:
     aks-infra-identity:
@@ -34,3 +41,26 @@ jobs:
               parameters: >
                 arm/parameters/resource-group.identity.json
                 resourceGroupLocation=${{ vars.AZURE_REGION }}
+          
+          - uses: azure/arm-deploy@v1
+            name: Managed Identity for AAG
+            id: uami-aag
+            with:
+              template: arm/templates/managed-identity.json
+              parameters: >
+                arm/parameters/managed-identity.aag.json
+              resourceGroupName: ${{ steps.resourceGroupIdentity.outputs.resourceGroupName }}
+              deploymentName: managed-identity-aag
+          
+          - uses: azure/arm-deploy@v1
+            name: Managed Identity for AKS
+            id: uami-aks
+            with:
+              template: arm/templates/managed-identity.json
+              parameters: >
+                arm/parameters/managed-identity.aks.json
+              resourceGroupName: ${{ steps.resourceGroupIdentity.outputs.resourceGroupName }}
+              deploymentName: managed-identity-aks
+        outputs:
+          aagIdentityResourceId: ${{ steps.uami-aag.outputs.userAssignedIdentityResourceId }}
+          aksIdentityResourceId: ${{ steps.uami-aks.outputs.userAssignedIdentityResourceId }}

@@ -1,0 +1,83 @@
+name: Provision Container Registry
+
+on:
+    workflow_call:
+      inputs:
+        logAnalyticsWorkspaceResourceId:
+          description: 'Log Analytics Workspace Resource Id'
+          required: true
+          type: string
+        vnetResourceId:
+          description: 'VNet Resource Id'
+          required: true
+          type: string
+        subnetResourceId:
+          description: 'Subnet Resource Id'
+          required: true
+          type: string
+        aksIdentityResourceId:
+          description: 'Application Gateway Identity Resource Id'
+          required: true
+          type: string
+      outputs:
+        acrResourceId:
+          description: 'Container Registry Resource Id'
+          value: ${{ jobs.provision-acr.outputs.acrResourceId }}
+
+jobs:
+  provision-acr:
+    environment: endor
+    runs-on: [ubuntu-latest]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Repo Self-Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1        
+        with:         
+            tenant-id: ${{ secrets.TENANT_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+            subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
+      
+      - uses: azure/arm-deploy@v1
+        name: RG ACR
+        id: resourceGroupRegistry
+        with:
+          scope: subscription
+          region: ${{ vars.AZURE_REGION }}
+          subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
+          deploymentName: rg-registry
+          template: arm/templates/resource-group.json
+          parameters: >
+            arm/parameters/resource-group.registry.json
+            resourceGroupLocation=${{ vars.AZURE_REGION }}
+      
+      - uses: azure/arm-deploy@v1
+        name: Container Registry
+        id: container-registry
+        with:
+          template: arm/templates/container-registry.json
+          parameters: >
+            arm/parameters/container-registry.json
+            virtualNetworkId=${{ inputs.vnetResourceId }}
+            subnetID=${{ inputs.subnetResourceId }}
+          resourceGroupName: ${{ steps.resourceGroupRegistry.outputs.resourceGroupName }}
+          deploymentName: container-registry
+      
+      - uses: azure/arm-deploy@v1
+        name: Allow the AAG to fetch images from ACR
+        id: acr-rbac-aag
+        with:
+          template: arm/templates/role-assignment.json
+          parameters: >
+            arm/parameters/role-assignment.aag-on-acr.json
+            targetResourceId=${{ steps.container-registry.outputs.acrResourceId }}
+            uamiResourceId=${{ inputs.aksIdentityResourceId }}
+          resourceGroupName: ${{ steps.resourceGroupRegistry.outputs.resourceGroupName }}
+          deploymentName: key-vault-rbac-aag
+    outputs:
+      acrResourceId: ${{ steps.container-registry.outputs.acrResourceId }}

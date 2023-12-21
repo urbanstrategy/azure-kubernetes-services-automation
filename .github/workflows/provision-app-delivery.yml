@@ -15,9 +15,20 @@ on:
           description: 'Subnet Resource Id'
           required: true
           type: string
+        aagIdentityResourceId:
+          description: 'Application Gateway Identity Resource Id'
+          required: true
+          type: string
+      outputs:
+        aagResourceId:
+          description: 'Application Gateway Resource Id'
+          value: ${{ jobs.provision-aag.outputs.aag-resource-id }}
+        keyVaultResourceId:
+          description: 'Key Vault Resource Id'
+          value: ${{ jobs.provision-akv.outputs.key-vault-resource-id }}
 
 jobs:
-  provision-application-delivery:
+  provision-aag:
     environment: endor
     runs-on: [ubuntu-latest]
     permissions:
@@ -67,5 +78,52 @@ jobs:
             arm/parameters/application-gateway.delivery.json
             subnetId=${{ inputs.subnetResourceId }}
             publicIPId=${{ steps.publicIP.outputs.public-ip-id }}
+            userAssignedIdentityResourceId=${{ inputs.aagIdentityResourceId }}
           resourceGroupName: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
           deploymentName: application-gateway-delivery
+    outputs:
+      delivery-resource-group-name: ${{ steps.resourceGroupDelivery.outputs.resourceGroupName }}
+      aag-resource-id: ${{ steps.applicationGateway.outputs.aagResourceId }}
+  
+  provision-akv:
+      environment: endor
+      runs-on: [ubuntu-latest]
+      needs: provision-aag
+      permissions:
+        contents: read
+        id-token: write
+      steps:
+        - name: Repo Self-Checkout
+          uses: actions/checkout@v3
+
+        - name: Azure Login
+          uses: azure/login@v1        
+          with:         
+              tenant-id: ${{ secrets.TENANT_ID }}
+              client-id: ${{ secrets.CLIENT_ID }}
+              subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+              enable-AzPSSession: true
+        
+        - uses: azure/arm-deploy@v1
+          name: Azure Key Vault
+          id: akv
+          with:
+            template: arm/templates/key-vault.json
+            parameters: >
+              arm/parameters/key-vault.json
+            resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
+            deploymentName: key-vault-delivery
+        
+        - uses: azure/arm-deploy@v1
+          name: Allow the AAG to read from AKV
+          id: key-vault-rbac-aag
+          with:
+            template: arm/templates/role-assignment.json
+            parameters: >
+              arm/parameters/role-assignment.aag-on-akv.json
+              targetResourceId=${{ steps.akv.outputs.keyVaultResourceId }}
+              uamiResourceId=${{ inputs.aagIdentityResourceId }}
+            resourceGroupName: ${{ needs.provision-aag.outputs.delivery-resource-group-name }}
+            deploymentName: key-vault-rbac-aag
+      outputs:
+        key-vault-resource-id: ${{ steps.akv.outputs.keyVaultResourceId }}
